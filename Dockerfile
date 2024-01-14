@@ -18,6 +18,9 @@ COPY . .
 # Berikan izin yang sesuai untuk Laravel
 RUN chown -R www-data:www-data storage bootstrap/cache
 
+# Jika file .env belum ada, salin dari .env.example
+COPY .env.example .env
+
 # Konfigurasi Apache
 COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite

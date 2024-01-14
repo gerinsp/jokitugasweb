@@ -4,6 +4,12 @@ services:
     app:
         build:
             context: .
+        environment:
+            - DB_HOST=db
+            - DB_PORT=3306
+            - DB_DATABASE=jokitugasweb
+            - DB_USERNAME=jokitugas
+            - DB_PASSWORD=jokitugas
         ports:
             - "8000:80"
         volumes:
