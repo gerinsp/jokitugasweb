@@ -6,19 +6,17 @@ RUN apt-get update \
     && apt-get install -y \
         libzip-dev \
         unzip \
-    && docker-php-ext-install zip
+        libpq-dev \
+        && docker-php-ext-install zip pdo_mysql pdo_pgsql
 
 # Setel direktori kerja di dalam container
 WORKDIR /var/www/html
 
 # Menyalin file sumber Laravel ke dalam container
-COPY . /var/www/html
+COPY . .
 
 # Berikan izin yang sesuai untuk Laravel
 RUN chown -R www-data:www-data storage bootstrap/cache
-
-# Generasi kunci aplikasi Laravel
-RUN php artisan key:generate
 
 # Konfigurasi Apache
 COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf
@@ -29,6 +27,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Install dependensi PHP menggunakan Composer
 RUN composer install
+
+# Generasi kunci aplikasi Laravel
+RUN php artisan key:generate
 
 # Expose port 80
 EXPOSE 80
