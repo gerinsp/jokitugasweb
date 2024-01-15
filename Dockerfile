@@ -21,10 +21,6 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 # Jika file .env belum ada, salin dari .env.example
 COPY .env.example .env
 
-# Konfigurasi Apache
-COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf
-RUN a2enmod rewrite
-
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -34,8 +30,8 @@ RUN composer install
 # Generasi kunci aplikasi Laravel
 RUN php artisan key:generate
 
-# Expose port 80
-EXPOSE 80
+# Expose port 8000 (port default untuk php artisan serve)
+EXPOSE 8000
 
-# Jalankan Apache
-CMD ["apache2-foreground"]
+# Jalankan server pengembangan Laravel
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
